@@ -3,6 +3,33 @@
 // Define the date that the countdown ends
 const targetDate = new Date("2026-11-15T12:00:00").getTime();
 </script>
+<style>
+  .countdown {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-family: monospace;
+}
+
+.countdown div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #171717;
+    padding: 15px;
+    border-radius: 10px;
+    min-width: 65px;
+}
+
+.countdown span {
+    font-size: 32px;
+    color: white;
+}
+
+.countdown small {
+    color: #999;
+}
+</style>
 <head>
   <title>DUSTBYTE Playtest</title>
 </head>
