@@ -1,0 +1,54 @@
+<html>
+<script>
+// Define the date that the countdown ends
+const targetDate = new Date("2026-11-15T12:00:00").getTime();
+</script>
+<head>
+  <title>DUSTBYTE Playtest</title>
+</head>
+<body>
+<div class="countdown">
+    <div>
+        <span id="days">undef</span>
+        <small>Days</small>
+    </div>
+    <div>
+        <span id="hours">undef</span>
+        <small>Hours</small>
+    </div>
+    <div>
+        <span id="minutes">undef</span>
+        <small>Minutes</small>
+    </div>
+    <div>
+        <span id="seconds">undef</span>
+        <small>Seconds</small>
+    </div>
+</div>
+</body>
+<script>
+function updateCountdown() {
+    const now = Date.now();
+    const distance = targetDate - now;
+
+    if (distance <= 0) {
+        document.querySelector(".countdown").textContent = "Event started!";
+        clearInterval(timer);
+        return;
+    }
+
+    const days = Math.floor(distance / 86400000);
+    const hours = Math.floor((distance % 86400000) / 3600000);
+    const minutes = Math.floor((distance % 3600000) / 60000);
+    const seconds = Math.floor((distance % 60000) / 1000);
+
+    document.getElementById("days").textContent = days;
+    document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+    document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+    document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+}
+
+updateCountdown();
+const timer = setInterval(updateCountdown, 1000);
+</script>
+</html>
