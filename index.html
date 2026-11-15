@@ -82,51 +82,71 @@ const url = "https://api.alcbgames.com/server/dustbyte/001.json";
 </div>
 </body>
 <script>
+
 async function updateText() {
-  try {
-    const statusElement = document.getElementById("status");
-    
-    const status = data.status.toLowerCase();
-    
-    if (status === "operational") {
-      statusElement.textContent = "● Operational";
-      statusElement.className = "operational";
-    
-    } else if (status === "downtime") {
-      statusElement.textContent = "● Downtime";
-      statusElement.className = "downtime";
-    
-    } else if (status === "maintenance") {
-      statusElement.textContent = "● Maintenance";
-      statusElement.className = "maintenance";
-    
-    } else {
-      statusElement.textContent = "● Unknown";
-      statusElement.className = "";
-    }
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error("HTTP error: " + response.status);
+        }
+
+        const data = await response.json();
+
+        // Update version
+        document.getElementById("version").textContent =
+            "Version: " + data.version;
+
+        // Update message
+        document.getElementById("message").textContent =
+            data.message;
+
+        // Update server status
+        const statusElement = document.getElementById("status");
+        const status = data.status.toLowerCase();
+
+        if (status === "operational") {
+            statusElement.textContent = "● Operational";
+            statusElement.className = "operational";
+
+        } else if (status === "downtime") {
+            statusElement.textContent = "● Downtime";
+            statusElement.className = "downtime";
+
+        } else if (status === "maintenance") {
+            statusElement.textContent = "● Maintenance";
+            statusElement.className = "maintenance";
+
+        } else {
+            statusElement.textContent = "● Unknown";
+            statusElement.className = "";
+        }
 
     } catch (error) {
         console.error("Failed to fetch JSON:", error);
+        document.getElementById("status").textContent = "● Connection Error";
+        document.getElementById("status").className = "downtime";
     }
 }
 
+// Server status settings
 if (serverstatusEnabled) {
-  updateText();
+    updateText();
+    setInterval(updateText, 30000);
 } else {
     document.querySelector(".status")?.remove();
 }
 
 
+// Countdown
+let timer;
 
-// Update every 30 seconds
-setInterval(updateText, 30000);
-  
 function updateCountdown() {
     const now = Date.now();
     const distance = targetDate - now;
 
     if (distance <= 0) {
-        document.querySelector(".countdown").textContent = "Event started!";
+        document.querySelector(".countdown")?.textContent = "Event started!";
         clearInterval(timer);
         return;
     }
@@ -144,9 +164,10 @@ function updateCountdown() {
 
 if (timerEnabled) {
     updateCountdown();
-    const timer = setInterval(updateCountdown, 1000);
+    timer = setInterval(updateCountdown, 1000);
 } else {
     document.querySelector(".countdown")?.remove();
 }
+
 </script>
 </html>
