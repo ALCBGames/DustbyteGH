@@ -1,7 +1,13 @@
 <html>
 <script>
-// Define the date that the countdown ends
+// Countdown ending
 const targetDate = new Date("2026-11-15T12:00:00").getTime();
+
+// Enable or disable countdown
+const timerEnabled = true;
+
+// Status URL
+const url = "https://api.alcbgames.com/version/dustbyte.json";
 </script>
 <style>
   .countdown {
@@ -54,6 +60,31 @@ const targetDate = new Date("2026-11-15T12:00:00").getTime();
 </div>
 </body>
 <script>
+async function updateText() {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        document.getElementById("version").textContent =
+            "Version: " + data.version;
+
+        document.getElementById("status").textContent =
+            "Status: " + data.status;
+
+        document.getElementById("message").textContent =
+            data.message;
+
+    } catch (error) {
+        console.error("Failed to fetch JSON:", error);
+    }
+}
+
+// Update immediately
+updateText();
+
+// Update every 30 seconds
+setInterval(updateText, 30000);
+  
 function updateCountdown() {
     const now = Date.now();
     const distance = targetDate - now;
@@ -75,7 +106,11 @@ function updateCountdown() {
     document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
 }
 
-updateCountdown();
-const timer = setInterval(updateCountdown, 1000);
+if (timerEnabled) {
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+} else {
+    document.querySelector(".countdown")?.remove();
+}
 </script>
 </html>
