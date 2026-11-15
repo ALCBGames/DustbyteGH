@@ -68,7 +68,7 @@ const url = "https://api.alcbgames.com/server/dustbyte/001.json";
 <div class="status">
 <p id="version">Loading...</p>
 <p id="status">Loading...</p>
-<p id="message">Loading...</p>
+<p id="patchnotes">Loading...</p>
 </div>
 <div class="countdown">
     <div>
@@ -105,7 +105,7 @@ async function updateText() {
         document.getElementById("version").textContent =
             "Version: " + data.version;
 
-        // Update message
+        // Update patchnotes
         document.getElementById("patchnotes").textContent =
             data.patchnotes;
 
