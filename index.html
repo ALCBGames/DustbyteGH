@@ -146,7 +146,12 @@ function updateCountdown() {
     const distance = targetDate - now;
 
     if (distance <= 0) {
-        document.querySelector(".countdown")?.textContent = "Event started!";
+        const countdown = document.querySelector(".countdown");
+
+    if (countdown) {
+      countdown.textContent = "Event started!";
+    }
+      
         clearInterval(timer);
         return;
     }
