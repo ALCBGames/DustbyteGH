@@ -1,13 +1,14 @@
 <html>
 <script>
+// Element Settings
+const timerEnabled = true;
+const serverstatusEnabled = true;
+
 // Countdown ending
 const targetDate = new Date("2026-11-19T12:00:00").getTime();
 
-// Enable or disable countdown
-const timerEnabled = true;
-
 // Status URL
-const url = "https://api.alcbgames.com/version/dustbyte.json";
+const url = "https://api.alcbgames.com/server/dustbyte/001.json";
 </script>
 <style>
   .countdown {
@@ -35,11 +36,32 @@ const url = "https://api.alcbgames.com/version/dustbyte.json";
 .countdown small {
     color: #999;
 }
+
+#status {
+    font-weight: bold;
+}
+
+.operational {
+    color: #4ade80;
+}
+
+.downtime {
+    color: #ef4444;
+}
+
+.maintenance {
+    color: #facc15;
+}
 </style>
 <head>
   <title>DUSTBYTE Playtest</title>
 </head>
 <body>
+<span class="status">
+<p id="version">Loading...</p>
+<p id="status">Loading...</p>
+<p id="message">Loading...</p>
+</span>
 <div class="countdown">
     <div>
         <span id="days">undef</span>
@@ -61,26 +83,40 @@ const url = "https://api.alcbgames.com/version/dustbyte.json";
 </body>
 <script>
 async function updateText() {
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-
-        document.getElementById("version").textContent =
-            "Version: " + data.version;
-
-        document.getElementById("status").textContent =
-            "Status: " + data.status;
-
-        document.getElementById("message").textContent =
-            data.message;
+  try {
+    const statusElement = document.getElementById("status");
+    
+    const status = data.status.toLowerCase();
+    
+    if (status === "operational") {
+      statusElement.textContent = "● Operational";
+      statusElement.className = "operational";
+    
+    } else if (status === "downtime") {
+      statusElement.textContent = "● Downtime";
+      statusElement.className = "downtime";
+    
+    } else if (status === "maintenance") {
+      statusElement.textContent = "● Maintenance";
+      statusElement.className = "maintenance";
+    
+    } else {
+      statusElement.textContent = "● Unknown";
+      statusElement.className = "";
+    }
 
     } catch (error) {
         console.error("Failed to fetch JSON:", error);
     }
 }
 
-// Update immediately
-updateText();
+if (serverstatusEnabled) {
+  updateText();
+} else {
+    document.querySelector(".status")?.remove();
+}
+
+
 
 // Update every 30 seconds
 setInterval(updateText, 30000);
